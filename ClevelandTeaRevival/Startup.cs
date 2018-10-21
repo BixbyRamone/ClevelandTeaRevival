@@ -37,8 +37,13 @@ namespace ClevelandTeaRevival
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            /*services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();*/
+            
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI().AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -56,6 +61,9 @@ namespace ClevelandTeaRevival
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+           // ConfigureAuth(app);
+           // createRolesandUsers();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

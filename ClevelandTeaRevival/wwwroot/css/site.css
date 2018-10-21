@@ -19,13 +19,26 @@ body {
 }
 
 /* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
+/*.carousel-inner .item img[src$=".svg"] {
     width: 100%;
-}
+}*/
 
 /* QR code generator */
 #qrCode {
     margin: 15px;
+}
+
+.login-inpt-box{
+    margin-top: 45px;
+    padding-left: 7%;
+}
+
+.user-inpt-box {
+    margin-left: 10px;
+}
+
+.pass-inpt-box {
+    margin-left: 72px;
 }
 
 /* Hide/rearrange for smaller screens */

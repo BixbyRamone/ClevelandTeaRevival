@@ -1,0 +1,73 @@
+﻿@model ClevelandTeaRevival.Models.Tea
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Tea</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PricePerCup)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PricePerCup)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PricePerOz)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PricePerOz)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PricePerPot)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PricePerPot)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PricePerLb)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PricePerLb)
+        </dd>               
+    </dl>
+</div>
+
+<div>
+   <select value="@ViewData["amountSwitch"]">
+    <option value="oz">oz:</option>
+    <option value="lb">lb:</option>
+   </select>
+    <input typeof="text" name="Amount" />
+        
+</div>
+<div>
+    <button>Purchase</button>
+</div>
+<div>
+    
+    <a asp-action="Index">Back to List</a>
+</div>
