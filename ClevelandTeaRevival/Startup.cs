@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using ClevelandTeaRevival.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Stripe;
+using ClevelandTeaRevival.Models;
 
 namespace ClevelandTeaRevival
 {
@@ -38,14 +40,15 @@ namespace ClevelandTeaRevival
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            /*services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();*/
-            
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI().AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,9 +65,10 @@ namespace ClevelandTeaRevival
                 app.UseHsts();
             }
 
-           // ConfigureAuth(app);
-           // createRolesandUsers();
+            StripeConfiguration.SetApiKey(Configuration.GetSection("Stripe")["SecretKey"]);
 
+
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <ul class="nav navbar-nav navbar-left">
+        <li><a>Cart()</a></li>
+
+    </ul>
+
+}
+else
+{
+    <ul class="nav navbar-nav navbar-left">
+        <li><a>Cart</a></li>
+
+    </ul>
+
+}

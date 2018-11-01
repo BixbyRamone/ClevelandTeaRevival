@@ -16,6 +16,5 @@ namespace ClevelandTeaRevival.Models
         [DataType(DataType.Currency)]
         public decimal Total { get; set; }
 
-        public Customer Customer { get; set; }
     }
 }

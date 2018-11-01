@@ -122,6 +122,17 @@ namespace ClevelandTeaRevival.Data
             }
             _context.SaveChanges();
 
+            var transactions = new Transaction[]
+            {
+                new Transaction{CustomerID=1, Total=1},
+                new Transaction{CustomerID=2, Total=2},
+                new Transaction{CustomerID=3, Total=3}
+            };
+            foreach (Transaction t in transactions)
+            {
+                _context.Transactions.Add(t);
+            }
+            _context.SaveChanges();
         }
 
 
