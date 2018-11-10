@@ -9,7 +9,7 @@ namespace ClevelandTeaRevival.Models
     public class Transaction
     {
         public int ID { get; set; }
-        public int CustomerID { get; set; }
+        public Customer Customer { get; set; }
 
         public ICollection<Tea> Teas { get; set; }
 

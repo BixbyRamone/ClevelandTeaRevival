@@ -124,9 +124,9 @@ namespace ClevelandTeaRevival.Data
 
             var transactions = new Transaction[]
             {
-                new Transaction{CustomerID=1, Total=1},
-                new Transaction{CustomerID=2, Total=2},
-                new Transaction{CustomerID=3, Total=3}
+                new Transaction{Total=1},
+                new Transaction{Total=2},
+                new Transaction{Total=3}
             };
             foreach (Transaction t in transactions)
             {

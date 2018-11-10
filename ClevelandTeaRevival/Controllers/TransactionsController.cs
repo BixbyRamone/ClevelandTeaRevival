@@ -8,27 +8,40 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ClevelandTeaRevival.Controllers
 {
     public class TransactionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _identityUser;
 
-        public TransactionsController(ApplicationDbContext context)
+        public TransactionsController(ApplicationDbContext context, UserManager<IdentityUser> identityUser)
         {
             _context = context;
+            _identityUser = identityUser;
         }
 
         // GET: Transactions
         public async Task<IActionResult> Index(string id)
         {
+            var currentUser = await _identityUser.GetUserAsync(User);
+
             string strId = HttpUtility.HtmlEncode(id);
             int intId;
             Int32.TryParse(strId, out intId);
 
+            var tea = _context.Teas
+               .Where(t => t.ID == intId)
+               .ToArrayAsync();
+            new Transaction
+            {
+
+            };
+
             var transaction = await _context.Transactions
-                .Where(t => t.CustomerID == intId)
+                .Where(t => t.Customer.ID == intId)
                 .ToArrayAsync();
             /*abstract out to service helper;*/
 

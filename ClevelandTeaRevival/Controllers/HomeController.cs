@@ -5,14 +5,41 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ClevelandTeaRevival.Models;
+using ClevelandTeaRevival.Helpers;
 using Stripe;
+using Microsoft.AspNetCore.Identity;
+using ClevelandTeaRevival.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClevelandTeaRevival.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _identityUser;
+
+
+        public HomeController(ApplicationDbContext context, UserManager<IdentityUser> identityUser)
         {
+            _context = context;
+            _identityUser = identityUser;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            UserRegisterHelpers userRegisterHelpers = new UserRegisterHelpers(_context);
+
+            var currentUser = await _identityUser.GetUserAsync(User);
+
+            if (currentUser != null)
+            {
+                await userRegisterHelpers.RegisterCustomer(currentUser);
+
+                /*var customer = await _context.Customers
+                                .Where(c => c.AspNetUserId == currentUser.Id)
+                                .ToArrayAsync();*/
+            }
+
             return View();
         }
 
