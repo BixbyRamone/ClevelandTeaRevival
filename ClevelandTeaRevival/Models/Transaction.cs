@@ -8,13 +8,21 @@ namespace ClevelandTeaRevival.Models
 {
     public class Transaction
     {
-        public int ID { get; set; }
+        public string ID { get; set; }  
         public Customer Customer { get; set; }
 
         public ICollection<Tea> Teas { get; set; }
 
         [DataType(DataType.Currency)]
         public decimal Total { get; set; }
+
+        public bool Completed { get; set; }
+
+        public Transaction()
+        {
+            Completed = false;
+            ID = Guid.NewGuid().ToString();
+        }
 
     }
 }

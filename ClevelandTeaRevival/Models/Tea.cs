@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,11 +34,16 @@ namespace ClevelandTeaRevival.Models
         [DataType(DataType.Currency)]
         public decimal PricePerPot { get; set; }
         [DataType(DataType.Currency)]
-        public decimal? PricePerLb { get; set; }
+        public decimal PricePerLb { get; set; }
         [DataType(DataType.Currency)]
-        public decimal? OtherPrice { get; set; }
+        public decimal OtherPrice { get; set; }
 
+        [NotMapped]
+        [DataType(DataType.Currency)]
+        public int Lbs { get; set; }
 
-        public int? Amount { get; set; }
+        [NotMapped]
+        [DataType(DataType.Currency)]
+        public int Ozs { get; set; }
     }
 }

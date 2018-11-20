@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ClevelandTeaRevival.Models.Transaction>
+﻿@model ClevelandTeaRevival.Models.Transaction
 
 @{
     ViewData["Title"] = "Index";
@@ -20,17 +20,18 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Total)
+                @Html.DisplayFor(model => model.Total)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@Model.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@Model.ID">Delete</a>
             </td>
-        </tr>
-}
+        
+    </tr>
+
     </tbody>
 </table>

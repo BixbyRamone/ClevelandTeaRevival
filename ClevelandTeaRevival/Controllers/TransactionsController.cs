@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
 using Microsoft.AspNetCore.Identity;
+using ClevelandTeaRevival.Helpers;
 
 namespace ClevelandTeaRevival.Controllers
 {
@@ -26,26 +27,79 @@ namespace ClevelandTeaRevival.Controllers
         // GET: Transactions
         public async Task<IActionResult> Index(string id)
         {
+            ShoppingCartHelpers shoppingCarHelpers = new ShoppingCartHelpers(_context);
+
+            //get urrent AspNetUser
             var currentUser = await _identityUser.GetUserAsync(User);
 
-            string strId = HttpUtility.HtmlEncode(id);
-            int intId;
-            Int32.TryParse(strId, out intId);
+            Customer currentCustomer = new Customer();
 
-            var tea = _context.Teas
-               .Where(t => t.ID == intId)
-               .ToArrayAsync();
-            new Transaction
+            //get customer associated with AspNetUserId
+           if (currentUser != null)
             {
+                currentCustomer = await _context.Customers
+                                    .Where(c => c.AspNetUserId == currentUser.Id)
+                                    .FirstOrDefaultAsync();
+            }
 
-            };
+           // Get any open transactions
+            var currentTransaction = await _context.Transactions
+                                     .Where(t => t.Customer == currentCustomer && t.Completed == false)
+                                     .FirstOrDefaultAsync();
 
-            var transaction = await _context.Transactions
-                .Where(t => t.Customer.ID == intId)
-                .ToArrayAsync();
-            /*abstract out to service helper;*/
+            bool isTransactionNew = false;
 
-            return View(transaction);
+            //get Tea that was ordered
+            string strId = HttpUtility.HtmlEncode(id);
+            var allTeas = shoppingCarHelpers.GetAllTeas();
+
+            var selectedTea = shoppingCarHelpers.GetTea(strId);
+
+            List<TransactionTab> transactionTabs = new List<TransactionTab>();
+
+            // if no current open transaction, create new transaction
+            if (currentTransaction == null)
+            {
+                //create a new transaction 
+                var transaction = shoppingCarHelpers.CreateNewTransaction(currentCustomer);
+                currentTransaction = transaction;
+
+                isTransactionNew = true;
+            }
+            else //get past transaction tabs
+            {
+                transactionTabs = shoppingCarHelpers.GetTransactionTabs(currentTransaction, allTeas);
+            }
+
+            //create transaction tab and add it to the db
+            var newTransactionTab = shoppingCarHelpers.NewTransactionTab(selectedTea, currentTransaction);
+            _context.Add(newTransactionTab[0]);
+
+
+            if(transactionTabs != null)
+            {
+                transactionTabs.Add(newTransactionTab[0]);
+            }
+            else
+            {
+                transactionTabs = newTransactionTab;
+            }
+
+            //calculate Total, Add teas to object, etc...
+            currentTransaction = shoppingCarHelpers.TransactionTotal(currentTransaction, transactionTabs);
+
+            if(isTransactionNew == true)
+            {
+                _context.Add(currentTransaction);
+            }
+            else
+            {
+                _context.Update(currentTransaction);
+            }
+           
+            _context.SaveChanges();
+
+            return View(currentTransaction);
         }
 
         // GET: Transactions/Details/5
@@ -57,7 +111,7 @@ namespace ClevelandTeaRevival.Controllers
             }
 
             var transaction = await _context.Transactions
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id.ToString());
             if (transaction == null)
             {
                 return NotFound();
@@ -111,7 +165,7 @@ namespace ClevelandTeaRevival.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,CustomerID,Total")] Transaction transaction)
         {
-            if (id != transaction.ID)
+            if (id.ToString() != transaction.ID)
             {
                 return NotFound();
             }
@@ -148,7 +202,7 @@ namespace ClevelandTeaRevival.Controllers
             }
 
             var transaction = await _context.Transactions
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id.ToString());
             if (transaction == null)
             {
                 return NotFound();
@@ -168,7 +222,7 @@ namespace ClevelandTeaRevival.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TransactionExists(int id)
+        private bool TransactionExists(string id)
         {
             return _context.Transactions.Any(e => e.ID == id);
         }

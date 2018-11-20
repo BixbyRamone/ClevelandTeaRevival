@@ -24,6 +24,7 @@ namespace ClevelandTeaRevival.Data
         public DbSet<FoodItem> FoodItems { get; set; }
         public DbSet<Tea> Teas { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<TransactionTab> TransactionTabs { get; set; }
 
     }
 }

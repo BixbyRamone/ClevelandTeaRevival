@@ -28,6 +28,7 @@ namespace ClevelandTeaRevival.Helpers
             {
                 Customer customerToAdd = new Customer();
                 customerToAdd.AspNetUserId = currentUser.Id;
+
                 _context.Add(customerToAdd);
 
                 await _context.SaveChangesAsync();
