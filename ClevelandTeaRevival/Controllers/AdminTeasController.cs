@@ -24,7 +24,6 @@ namespace ClevelandTeaRevival.Controllers
         {
             _context = context;
             _userManager = userManager;
-           // _userRole = userRole;
         }
 
         // GET: AdminTeas
