@@ -1,4 +1,4 @@
-﻿@model ClevelandTeaRevival.Models.Transaction
+﻿@model ClevelandTeaRevival.ViewModels.TransactionViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -14,24 +14,42 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Total)
+               Tea
             </th>
-            <th></th>
+            <th>
+                Lbs
+            </th>
+            <th>
+                Ozs
+            </th>
+            <th>
+                Tea Price
+            </th>
         </tr>
     </thead>
     <tbody>
-
+@foreach (var item in Model.TransactionTabs)
+{
         <tr>
             <td>
-                @Html.DisplayFor(model => model.Total)
+                @Html.DisplayFor(model => item.Tea.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@Model.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@Model.ID">Delete</a>
+                @Html.DisplayFor(model => item.Lbs)
             </td>
-        
-    </tr>
+            <td>
+                @Html.DisplayFor(model => item.Ozs)
+            </td>
+            <td>
 
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+
+        </tr>
+}
     </tbody>
 </table>

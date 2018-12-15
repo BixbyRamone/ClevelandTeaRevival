@@ -39,11 +39,9 @@ namespace ClevelandTeaRevival.Models
         public decimal OtherPrice { get; set; }
 
         [NotMapped]
-        [DataType(DataType.Currency)]
         public int Lbs { get; set; }
 
         [NotMapped]
-        [DataType(DataType.Currency)]
         public int Ozs { get; set; }
     }
 }

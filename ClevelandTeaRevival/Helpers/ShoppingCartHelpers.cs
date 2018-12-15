@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ClevelandTeaRevival.Helpers
 {
@@ -59,8 +60,13 @@ namespace ClevelandTeaRevival.Helpers
                 decimal lbsTotal = t.Tea.PricePerLb * t.Lbs;
 
                 transTotal = transTotal + ozTotal + lbsTotal;
+
+                if ( currentTransaction.Teas.IndexOf(t.Tea) == -1)
+                {
+                    currentTransaction.Teas.Add(t.Tea);
+                }
+               
                 
-                currentTransaction.Teas.Add(t.Tea);
             }
 
             currentTransaction.Total = transTotal;           
@@ -99,6 +105,22 @@ namespace ClevelandTeaRevival.Helpers
             var allteas = _context.Teas.ToList();
 
             return (allteas);
+        }
+
+        public List<TransactionTab> ManageTransactionTab(List<TransactionTab> transactionTabs, TransactionTab currentTab)
+        {
+            
+            var isPresent = transactionTabs.IndexOf(currentTab);
+            if (isPresent == -1)
+            {
+                transactionTabs.Add(currentTab);
+            }
+            else
+            {
+                transactionTabs[isPresent].Ozs = transactionTabs[isPresent].Ozs + 1;
+            }
+
+            return (transactionTabs);
         }
     }
 }

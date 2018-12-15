@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
+using ClevelandTeaRevival.ViewModels;
 
 namespace ClevelandTeaRevival.Controllers
 {
@@ -22,7 +23,14 @@ namespace ClevelandTeaRevival.Controllers
         // GET: Shop
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Teas.ToListAsync());
+
+            var teas = await _context.Teas.ToListAsync();
+
+            var viewModel = new ShopViewModel
+            {
+                Teas = teas
+            };
+            return View(viewModel);
         }
 
         // GET: Shop/Details/5
@@ -39,6 +47,8 @@ namespace ClevelandTeaRevival.Controllers
             {
                 return NotFound();
             }
+
+            
 
             return View(tea);
         }

@@ -1,20 +1,38 @@
-﻿@model IEnumerable<ClevelandTeaRevival.Models.Tea>
+﻿@model ClevelandTeaRevival.ViewModels.ShopViewModel
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Our Teas</h2>
+@{ List<int> ozList = new List<int>();
 
+    for(int i = 0; i <= 15; i++)
+    {
+        ozList.Add(i);
+
+    }
+
+    List<int> lbsList = new List<int>();
+
+    for(int i = 0; i <= 3; i++)
+    {
+        lbsList.Add(i);
+
+    }
+}
+
+
+<h2>Our Teas</h2>
+@Model.
 
 @{
     List<string> categories = new List<string>();
 
-    foreach (var tea in Model)
+    foreach (var tea in Model.Teas)
     {
 
-        var index = categories.IndexOf(tea.Category);
+        var index = categories.IndexOf(tea.Name);
         if (index == -1)
         {
             categories.Add(tea.Category);
@@ -37,59 +55,85 @@
                 <tr>
 
                     <th>
-                        @Html.DisplayNameFor(model => model.Name)
+                        @Html.DisplayNameFor(model => model.Teas)
                     </th>
 
                     <th>
-                        @Html.DisplayNameFor(model => model.Description)
-                    </th>                    
-
-                    <th>
-                        @Html.DisplayNameFor(model => model.PricePerOz)
+                        Description
                     </th>
 
                     <th>
-                        @Html.DisplayNameFor(model => model.PricePerLb)
+                        Price per Oz
                     </th>
+
+                    <th>
+                        Price Per Lb
+                    </th>
+
+                    <th>Ozs</th>
+                    <th>Lbs</th>
+                    <th></th>
+
 
 
                 </tr>
             </thead>
             <tbody>
 
-                @foreach (var item in Model)
+                @foreach (var item in Model.Teas)
                 {
                     if (item.Category == Category)
                     {
-                <tr>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.ID">
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </a>
-                    </td>
+                        <tr>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.ID">
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </a>
+                            </td>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PricePerOz)
-                    </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PricePerOz)
+                            </td>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PricePerLb)
-                    </td>
-
-                    <td>
-                        
-                        <div>
-                            <a asp-controller="Transactions" asp-action="Index" asp-route-id="@item.ID">Add To Cart</a>
-                        </div>
-
-                    </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PricePerLb)
+                            </td>
 
 
-                </tr>
+                            @item.Name
+                            @using (Html.BeginForm("AddToCart", "Transactions"))
+                            {
+
+                                @Html.HiddenFor(modelItem => item.Name)
+                                @Html.HiddenFor(modelItem => item.ID)
+                                <td>
+                                    <div class="form-group">
+                                        @Html.LabelFor(modelItem => item.Ozs)
+                                        @Html.DropDownListFor(modelItem => item.Ozs, new SelectList(ozList), "  ", new { @class = "form-control" })
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="form-group">
+                                        @Html.LabelFor(modelItem => item.Lbs)
+                                        @Html.DropDownListFor(modelItem => item.Lbs, new SelectList(lbsList), "  ", new { @class = "form-control" })
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary">Add To Cart</button>
+                                    </div>
+                                </td>
+                            }
+
+
+
+                        </tr>
                     }
 
 

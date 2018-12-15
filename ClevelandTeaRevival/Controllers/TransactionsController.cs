@@ -10,6 +10,7 @@ using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
 using Microsoft.AspNetCore.Identity;
 using ClevelandTeaRevival.Helpers;
+using ClevelandTeaRevival.ViewModels;
 
 namespace ClevelandTeaRevival.Controllers
 {
@@ -24,10 +25,18 @@ namespace ClevelandTeaRevival.Controllers
             _identityUser = identityUser;
         }
 
+        //[HttpPost]
+        public ActionResult AddToCart(TransactionTab transactionTab)
+        {
+            int x = 41;
+
+            return View();
+        }   
+
         // GET: Transactions
         public async Task<IActionResult> Index(string id)
         {
-            ShoppingCartHelpers shoppingCarHelpers = new ShoppingCartHelpers(_context);
+            ShoppingCartHelpers shoppingCartHelpers = new ShoppingCartHelpers(_context);
 
             //get urrent AspNetUser
             var currentUser = await _identityUser.GetUserAsync(User);
@@ -51,33 +60,37 @@ namespace ClevelandTeaRevival.Controllers
 
             //get Tea that was ordered
             string strId = HttpUtility.HtmlEncode(id);
-            var allTeas = shoppingCarHelpers.GetAllTeas();
+            var allTeas = shoppingCartHelpers.GetAllTeas();
 
-            var selectedTea = shoppingCarHelpers.GetTea(strId);
+            var selectedTea = shoppingCartHelpers.GetTea(strId);
 
-            List<TransactionTab> transactionTabs = new List<TransactionTab>();
+            var transactionTabs = await _context.TransactionTabs
+                                    .Where(tt => tt.TransId == currentTransaction.ID)
+                                    .ToListAsync();
+            //List<TransactionTab> transactionTabs = new List<TransactionTab>();
 
             // if no current open transaction, create new transaction
             if (currentTransaction == null)
             {
                 //create a new transaction 
-                var transaction = shoppingCarHelpers.CreateNewTransaction(currentCustomer);
+                var transaction = shoppingCartHelpers.CreateNewTransaction(currentCustomer);
                 currentTransaction = transaction;
 
                 isTransactionNew = true;
             }
             else //get past transaction tabs
             {
-                transactionTabs = shoppingCarHelpers.GetTransactionTabs(currentTransaction, allTeas);
+                transactionTabs = shoppingCartHelpers.GetTransactionTabs(currentTransaction, allTeas);
             }
 
             //create transaction tab and add it to the db
-            var newTransactionTab = shoppingCarHelpers.NewTransactionTab(selectedTea, currentTransaction);
+            var newTransactionTab = shoppingCartHelpers.NewTransactionTab(selectedTea, currentTransaction);
             _context.Add(newTransactionTab[0]);
 
 
-            if(transactionTabs != null)
+            if(transactionTabs.Count() > 0)
             {
+                //transactionTabs = shoppingCartHelpers.ManageTransactionTab(transactionTabs, newTransactionTab[0]);
                 transactionTabs.Add(newTransactionTab[0]);
             }
             else
@@ -86,7 +99,7 @@ namespace ClevelandTeaRevival.Controllers
             }
 
             //calculate Total, Add teas to object, etc...
-            currentTransaction = shoppingCarHelpers.TransactionTotal(currentTransaction, transactionTabs);
+            currentTransaction = shoppingCartHelpers.TransactionTotal(currentTransaction, transactionTabs);
 
             if(isTransactionNew == true)
             {
@@ -99,7 +112,13 @@ namespace ClevelandTeaRevival.Controllers
            
             _context.SaveChanges();
 
-            return View(currentTransaction);
+            var viewModel = new TransactionViewModel
+            {
+                TransactionTabs = transactionTabs,
+                Transaction = currentTransaction
+            };
+
+            return View(transactionTabs);
         }
 
         // GET: Transactions/Details/5
