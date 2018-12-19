@@ -14,6 +14,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Stripe;
 using ClevelandTeaRevival.Models;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace ClevelandTeaRevival
 {
@@ -49,6 +52,13 @@ namespace ClevelandTeaRevival
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSession();
+
+            var embeddedFileProvider = new EmbeddedFileProvider(typeof(FormFactory.FF).GetTypeInfo().Assembly, nameof(FormFactory));
+            //Add the file provider to the Razor view engine
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.FileProviders.Add(embeddedFileProvider);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

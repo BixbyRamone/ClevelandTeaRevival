@@ -48,9 +48,12 @@ namespace ClevelandTeaRevival.Controllers
                 return NotFound();
             }
 
-            
+            var viewModel = new DetailsViewModel
+            {
+                Tea = tea
+            };
 
-            return View(tea);
+            return View(viewModel);
         }
 
         // GET: Shop/Create

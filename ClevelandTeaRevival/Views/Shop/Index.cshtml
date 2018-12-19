@@ -84,56 +84,59 @@
                 {
                     if (item.Category == Category)
                     {
-                        <tr>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.ID">
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </a>
-                            </td>
+                <tr>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.ID">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </a>
+                    </td>
 
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Description)
-                            </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
 
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PricePerOz)
-                            </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PricePerOz)
+                    </td>
 
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PricePerLb)
-                            </td>
-
-
-                            @item.Name
-                            @using (Html.BeginForm("AddToCart", "Transactions"))
-                            {
-
-                                @Html.HiddenFor(modelItem => item.Name)
-                                @Html.HiddenFor(modelItem => item.ID)
-                                <td>
-                                    <div class="form-group">
-                                        @Html.LabelFor(modelItem => item.Ozs)
-                                        @Html.DropDownListFor(modelItem => item.Ozs, new SelectList(ozList), "  ", new { @class = "form-control" })
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="form-group">
-                                        @Html.LabelFor(modelItem => item.Lbs)
-                                        @Html.DropDownListFor(modelItem => item.Lbs, new SelectList(lbsList), "  ", new { @class = "form-control" })
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div>
-                                        <button type="submit" class="btn btn-primary">Add To Cart</button>
-                                    </div>
-                                </td>
-                            }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PricePerLb)
+                    </td>
 
 
 
-                        </tr>
+                    @using (Html.BeginForm("AddToCart", "Transactions"))
+                    {
+                        <td>
+                            <div class="form-group">
+                                @Html.DropDownListFor(Model => Model.TransactionTab.Ozs, new SelectList(ozList), new { @class = "form-control" })
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="form-group">
+                                @Html.DropDownListFor(Model => Model.TransactionTab.Lbs, new SelectList(lbsList), new { @class = "form-control" })
+                            </div>
+                        </td>
+
+
+                        @Html.Hidden("Tea.ID", $"{item.ID}")
+                        @Html.Hidden("Tea.Name", $"{item.Name}")
+                        @Html.Hidden("Tea.PricePerOz", $"{item.PricePerOz}")
+                        @Html.Hidden("Tea.PricePerLb", $"{item.PricePerLb}")
+
+                        @Html.HiddenFor(model => model.TransactionTab)
+
+                        <td>
+                            <div>
+                                <button type="submit" class="btn btn-primary">Add To Cart</button>
+                            </div>
+                        </td>
+                    }
+
+
+
+                </tr>
                     }
 
 

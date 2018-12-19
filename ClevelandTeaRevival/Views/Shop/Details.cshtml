@@ -1,8 +1,25 @@
-﻿@model ClevelandTeaRevival.Models.Tea
+﻿@model ClevelandTeaRevival.ViewModels.DetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ List<int> ozList = new List<int>();
+
+    for (int i = 0; i <= 15; i++)
+    {
+        ozList.Add(i);
+
+    }
+
+    List<int> lbsList = new List<int>();
+
+    for (int i = 0; i <= 3; i++)
+    {
+        lbsList.Add(i);
+
+    }
 }
 
 <h2>Details</h2>
@@ -12,63 +29,90 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Tea.Name)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Tea.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Category)
+            @Html.DisplayNameFor(model => model.Tea.Category)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Category)
+            @Html.DisplayFor(model => model.Tea.Category)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Tea.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Tea.Description)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ImageLink)
+            @Html.DisplayNameFor(model => model.Tea.ImageLink)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ImageLink)
+            @Html.DisplayFor(model => model.Tea.ImageLink)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.PricePerCup)
+            @Html.DisplayNameFor(model => model.Tea.PricePerCup)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PricePerCup)
+            @Html.DisplayFor(model => model.Tea.PricePerCup)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.PricePerOz)
+            @Html.DisplayNameFor(model => model.Tea.PricePerOz)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PricePerOz)
+            @Html.DisplayFor(model => model.Tea.PricePerOz)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.PricePerPot)
+            @Html.DisplayNameFor(model => model.Tea.PricePerPot)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PricePerPot)
+            @Html.DisplayFor(model => model.Tea.PricePerPot)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.PricePerLb)
+            @Html.DisplayNameFor(model => model.Tea.PricePerLb)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PricePerLb)
+            @Html.DisplayFor(model => model.Tea.PricePerLb)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.OtherPrice)
+            @Html.DisplayNameFor(model => model.Tea.OtherPrice)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.OtherPrice)
+            @Html.DisplayFor(model => model.Tea.OtherPrice)
         </dd>
-        
+
     </dl>
 </div>
+
+@using (Html.BeginForm("AddToCart", "Transactions"))
+{
+    @Html.HiddenFor(model => model.Tea.ID)
+    @Html.HiddenFor(model => model.Tea.Name)
+    @Html.HiddenFor(model => model.Tea.PricePerOz)
+    @Html.HiddenFor(model => model.Tea.PricePerLb)
+    
+    @Html.HiddenFor(model => model.TransactionTab.ID)
+    @Html.HiddenFor(model => model.TransactionTab.TransId)
+    @Html.HiddenFor(model => model.TransactionTab.TeaId)
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TransactionTab.Ozs)
+        @Html.DropDownListFor(model => model.TransactionTab.Ozs, new SelectList(ozList), "  ", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TransactionTab.Lbs)
+        @Html.DropDownListFor(model => model.TransactionTab.Lbs, new SelectList(lbsList), "  ", new { @class = "form-control" })
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-primary">Add To Cart</button>
+    </div>
+}
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Tea.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

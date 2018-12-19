@@ -1,4 +1,5 @@
 ﻿using ClevelandTeaRevival.Data;
+using ClevelandTeaRevival.Helpers.HelperModels;
 using ClevelandTeaRevival.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClevelandTeaRevival.Helpers;
+using ClevelandTeaRevival.ViewModels;
 
 namespace ClevelandTeaRevival.Helpers
 {
@@ -37,6 +40,70 @@ namespace ClevelandTeaRevival.Helpers
            
 
             return null;
+        }
+
+        public UserTransactionHelper GetCustomerTransaction(string currentUserId)
+        {
+            Customer currentCustomer = new Customer();
+
+            //get customer associated with AspNetUserId
+            if (currentUserId != null)
+            {
+                currentCustomer = _context.Customers
+                                    .Where(c => c.AspNetUserId == currentUserId)
+                                    .FirstOrDefault();
+            }
+
+            // Get any open transactions
+            var currentTransaction = _context.Transactions
+                                     .Where(t => t.Customer == currentCustomer && t.Completed == false)
+                                     .FirstOrDefault();
+
+            UserTransactionHelper userTransactionHelper = new UserTransactionHelper
+            {
+                Transaction = currentTransaction,
+                Customer = currentCustomer
+            };
+
+            return (userTransactionHelper);
+
+        }
+
+        public bool GetOrCreateTransactionTab(UserTransactionHelper customerTransaction, DetailsViewModel teaAndTransTab)
+        {
+            bool isTransactionNew = false;
+
+            List<TransactionTab> transactionTabs = new List<TransactionTab>();
+
+            try
+            {
+                transactionTabs = _context.TransactionTabs
+                                    .Where(tt => tt.TransId == customerTransaction.Transaction.ID)
+                                    .ToList();
+            }
+            catch
+            {
+
+            }
+            
+
+            ShoppingCartHelpers shoppingCartHelpers = new ShoppingCartHelpers(_context);
+
+            if (customerTransaction.Transaction == null)
+            {
+                //create a new transaction 
+                var transaction = shoppingCartHelpers.CreateNewTransaction(customerTransaction.Customer);
+                customerTransaction.Transaction = transaction;
+
+                isTransactionNew = true;
+            }
+            else //get past transaction tabs
+            {
+               transactionTabs.Add(teaAndTransTab.TransactionTab);
+            }
+
+            return (isTransactionNew);
+
         }
     }
 }

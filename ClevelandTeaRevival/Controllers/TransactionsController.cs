@@ -26,11 +26,25 @@ namespace ClevelandTeaRevival.Controllers
         }
 
         //[HttpPost]
-        public ActionResult AddToCart(TransactionTab transactionTab)
+        public ActionResult AddToCart(DetailsViewModel viewModel)
         {
-            int x = 41;
+            UserRegisterHelpers userRegisterHelpers = new UserRegisterHelpers(_context);
 
-            return View();
+            viewModel.TransactionTab.TeaId = viewModel.Tea.ID;
+
+            //get urrent AspNetUser
+            var currentUserId = _identityUser.GetUserId(User);
+
+            var customerTransaction = userRegisterHelpers.GetCustomerTransaction(currentUserId);
+
+            // need to find any open transactions, see if current transactionTab exists on that,
+            //then add  transactionTab if it doesn't exist
+
+            var hi = userRegisterHelpers.GetOrCreateTransactionTab(customerTransaction, viewModel);
+
+            _context.TransactionTabs.Add(viewModel.TransactionTab);
+           // _context.SaveChanges();
+            return RedirectToAction("Index", "Shop");
         }   
 
         // GET: Transactions

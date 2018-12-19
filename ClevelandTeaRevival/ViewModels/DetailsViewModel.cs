@@ -6,15 +6,10 @@ using System.Threading.Tasks;
 
 namespace ClevelandTeaRevival.ViewModels
 {
-    public class ShopViewModel
+    public class DetailsViewModel
     {
-        public List<Tea> Teas { get; set; }
         public Tea Tea { get; set; }
         public TransactionTab TransactionTab { get; set; }
-
-        public List<int> ozList { get; set; }
-        public List<int> lbsList { get; set; }
-
+                
     }
-   
 }
