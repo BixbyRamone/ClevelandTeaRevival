@@ -31,6 +31,7 @@ namespace ClevelandTeaRevival.Controllers
             UserRegisterHelpers userRegisterHelpers = new UserRegisterHelpers(_context);
 
             viewModel.TransactionTab.TeaId = viewModel.Tea.ID;
+           // viewModel.TransactionTab.Tea = viewModel.Tea;
 
             //get urrent AspNetUser
             var currentUserId = _identityUser.GetUserId(User);
@@ -40,10 +41,25 @@ namespace ClevelandTeaRevival.Controllers
             // need to find any open transactions, see if current transactionTab exists on that,
             //then add  transactionTab if it doesn't exist
 
-            var hi = userRegisterHelpers.GetOrCreateTransactionTab(customerTransaction, viewModel);
+            viewModel.TransactionTab.TransId = customerTransaction.Transaction.ID;
 
-            _context.TransactionTabs.Add(viewModel.TransactionTab);
-           // _context.SaveChanges();
+            TransactionTab testTransTab = new TransactionTab();
+            testTransTab = viewModel.TransactionTab;
+
+
+            _context.Add(testTransTab);
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception x)
+            {
+                return Content(x.ToString());
+            }
+            
+            
+
             return RedirectToAction("Index", "Shop");
         }   
 

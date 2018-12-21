@@ -59,6 +59,16 @@ namespace ClevelandTeaRevival.Helpers
                                      .Where(t => t.Customer == currentCustomer && t.Completed == false)
                                      .FirstOrDefault();
 
+            if (currentTransaction == null)
+            {
+                ShoppingCartHelpers shoppingCartHelpers = new ShoppingCartHelpers(_context);
+                var newTransaction = shoppingCartHelpers.CreateNewTransaction(currentCustomer);
+
+                currentTransaction = newTransaction;
+            }
+
+            
+
             UserTransactionHelper userTransactionHelper = new UserTransactionHelper
             {
                 Transaction = currentTransaction,
@@ -68,14 +78,16 @@ namespace ClevelandTeaRevival.Helpers
             return (userTransactionHelper);
 
         }
-
-        public bool GetOrCreateTransactionTab(UserTransactionHelper customerTransaction, DetailsViewModel teaAndTransTab)
+       
+        public DetailsViewModel GetOrCreateTransactionTab(UserTransactionHelper customerTransaction, DetailsViewModel teaAndTransTab)
         {
-            bool isTransactionNew = false;
+            //bool isTransactionNew = false;
+
+            teaAndTransTab.TransactionTab.TransId = customerTransaction.Transaction.ID;
 
             List<TransactionTab> transactionTabs = new List<TransactionTab>();
 
-            try
+           /* try
             {
                 transactionTabs = _context.TransactionTabs
                                     .Where(tt => tt.TransId == customerTransaction.Transaction.ID)
@@ -85,9 +97,10 @@ namespace ClevelandTeaRevival.Helpers
             {
 
             }
+
             
 
-            ShoppingCartHelpers shoppingCartHelpers = new ShoppingCartHelpers(_context);
+            /*ShoppingCartHelpers shoppingCartHelpers = new ShoppingCartHelpers(_context);
 
             if (customerTransaction.Transaction == null)
             {
@@ -100,9 +113,9 @@ namespace ClevelandTeaRevival.Helpers
             else //get past transaction tabs
             {
                transactionTabs.Add(teaAndTransTab.TransactionTab);
-            }
+            }*/
 
-            return (isTransactionNew);
+            return (teaAndTransTab);
 
         }
     }

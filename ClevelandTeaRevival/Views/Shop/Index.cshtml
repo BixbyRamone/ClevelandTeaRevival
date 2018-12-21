@@ -122,6 +122,8 @@
 
                         @Html.Hidden("Tea.ID", $"{item.ID}")
                         @Html.Hidden("Tea.Name", $"{item.Name}")
+                        @Html.HiddenFor(model => model.Tea, item)
+
                         @Html.Hidden("Tea.PricePerOz", $"{item.PricePerOz}")
                         @Html.Hidden("Tea.PricePerLb", $"{item.PricePerLb}")
 
