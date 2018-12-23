@@ -1,5 +1,51 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ClevelandTeaRevival.ViewModels.ShoppingCartViewModel
+
 @{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<h2>Checkout</h2>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                Tea
+            </th>
+
+            <th>
+                Ounces
+            </th>
+
+            <th>
+                Pounds
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @{
+            foreach (var item in Model.TransactionTabs)
+            {
+
+
+                <tr>
+                    <td>
+                        @item.Tea.Name
+                    </td>
+                    <td>
+                        @item.Ozs
+                    </td>
+                    <td>
+                        @item.Lbs
+                    </td>
+                </tr>
+
+
+            }
+        }
+    </tbody>
+</table>

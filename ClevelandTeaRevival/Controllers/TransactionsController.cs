@@ -31,7 +31,10 @@ namespace ClevelandTeaRevival.Controllers
             UserRegisterHelpers userRegisterHelpers = new UserRegisterHelpers(_context);
 
             viewModel.TransactionTab.TeaId = viewModel.Tea.ID;
-           // viewModel.TransactionTab.Tea = viewModel.Tea;
+
+            viewModel.TransactionTab.PricePerOz = viewModel.Tea.PricePerOz;
+            viewModel.TransactionTab.PricePerLb = viewModel.Tea.PricePerLb;
+            // viewModel.TransactionTab.Tea = viewModel.Tea;
 
             //get urrent AspNetUser
             var currentUserId = _identityUser.GetUserId(User);
@@ -43,11 +46,11 @@ namespace ClevelandTeaRevival.Controllers
 
             viewModel.TransactionTab.TransId = customerTransaction.Transaction.ID;
 
-            TransactionTab testTransTab = new TransactionTab();
-            testTransTab = viewModel.TransactionTab;
+            TransactionTab newTransTab = new TransactionTab();
+            newTransTab = viewModel.TransactionTab;
 
 
-            _context.Add(testTransTab);
+            _context.Add(newTransTab);
 
             try
             {

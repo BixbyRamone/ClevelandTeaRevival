@@ -16,7 +16,15 @@ namespace ClevelandTeaRevival.Models
         public string TransId { get; set; }
         public int TeaId { get; set; }
         public Tea Tea { get; set; }
+
+        [DataType(DataType.Currency)]
+        public decimal PricePerOz { get; set; }
+        
         public int Ozs { get; set; }
+
+        [DataType(DataType.Currency)]
+        public decimal PricePerLb { get; set; }
+
         public int Lbs { get; set; }
 
        /* public IEnumerator<TransactionTab> GetEnumerator()

@@ -8,7 +8,9 @@ namespace ClevelandTeaRevival.Models
 {
     public class Transaction
     {
-        public string ID { get; set; }  
+        public string ID { get; set; }
+
+        public int CustomerId { get; set; }
         public Customer Customer { get; set; }
 
         public ICollection<Tea> Teas { get; set; }

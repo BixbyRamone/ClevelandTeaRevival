@@ -65,6 +65,9 @@ namespace ClevelandTeaRevival.Helpers
                 var newTransaction = shoppingCartHelpers.CreateNewTransaction(currentCustomer);
 
                 currentTransaction = newTransaction;
+
+                _context.Add(currentTransaction);
+                _context.SaveChanges();
             }
 
             

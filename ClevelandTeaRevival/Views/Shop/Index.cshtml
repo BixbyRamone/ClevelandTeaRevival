@@ -32,7 +32,7 @@
     foreach (var tea in Model.Teas)
     {
 
-        var index = categories.IndexOf(tea.Name);
+        var index = categories.IndexOf(tea.Category);
         if (index == -1)
         {
             categories.Add(tea.Category);
