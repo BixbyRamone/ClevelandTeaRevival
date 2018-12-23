@@ -122,5 +122,19 @@ namespace ClevelandTeaRevival.Helpers
 
             return (transactionTabs);
         }
+
+        public List<TransactionTab> AssignTeasToTabs(List<TransactionTab> transactionTabs)
+        {
+            foreach (var tranTab in transactionTabs)
+            {
+                var tea = _context.Teas
+                            .Where(t => t.ID == tranTab.TeaId)
+                            .FirstOrDefault();
+
+                tranTab.Tea = tea;
+            }
+
+            return transactionTabs;
+        }
     }
 }

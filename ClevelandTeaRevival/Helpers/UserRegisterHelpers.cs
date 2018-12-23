@@ -44,7 +44,10 @@ namespace ClevelandTeaRevival.Helpers
 
         public UserTransactionHelper GetCustomerTransaction(string currentUserId)
         {
-            Customer currentCustomer = new Customer();
+                Customer currentCustomer = new Customer();
+
+            var testTransactions = _context.Transactions
+                                    .ToList();
 
             //get customer associated with AspNetUserId
             if (currentUserId != null)

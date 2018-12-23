@@ -34,10 +34,6 @@ namespace ClevelandTeaRevival.Controllers
             if (currentUser != null)
             {
                 await userRegisterHelpers.RegisterCustomer(currentUser);
-
-                /*var customer = await _context.Customers
-                                .Where(c => c.AspNetUserId == currentUser.Id)
-                                .ToArrayAsync();*/
             }
 
             return View();

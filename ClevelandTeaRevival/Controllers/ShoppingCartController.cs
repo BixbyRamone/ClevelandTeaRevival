@@ -9,6 +9,7 @@ using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
 using Microsoft.AspNetCore.Identity;
 using ClevelandTeaRevival.ViewModels;
+using ClevelandTeaRevival.Helpers;
 
 namespace ClevelandTeaRevival.Controllers
 {
@@ -23,29 +24,25 @@ namespace ClevelandTeaRevival.Controllers
             _identityUser = identityUser;
         }
 
-        public  ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            Transaction currentTrans;
-            try
-            {
-                var currentUser = _identityUser.GetUserAsync(User);
+            UserRegisterHelpers userRegisterHelpers = new UserRegisterHelpers(_context);
+            ShoppingCartHelpers shoppingCartHelpers = new ShoppingCartHelpers(_context);
 
-                var currentCustomer = _context.Customers.SingleOrDefault(c => c.AspNetUserId == currentUser.Id.ToString());
+            var currentUser = await _identityUser.GetUserAsync(User);
 
-                currentTrans = _context.Transactions.SingleOrDefault(t => t.CustomerId == currentCustomer.ID);
-            }
-            catch(Exception err)
-            {
-                return Content(err.ToString());
-            }
+            var transObj = userRegisterHelpers.GetCustomerTransaction(currentUser.Id);           
+           
 
 
-            var transactionTabs = _context.TransactionTabs.Where(t => t.TransId == currentTrans.ID).ToList();
+            var transactionTabs = _context.TransactionTabs.Where(t => t.TransId == transObj.Transaction.ID).ToList();
+
+            transactionTabs = shoppingCartHelpers.AssignTeasToTabs(transactionTabs);
 
             var viewModel = new ShoppingCartViewModel
             {
                 TransactionTabs = transactionTabs,
-                Transaction = currentTrans
+                Transaction = transObj.Transaction
             };
 
             
