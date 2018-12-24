@@ -28,6 +28,7 @@ namespace ClevelandTeaRevival.Controllers
         {
             UserRegisterHelpers userRegisterHelpers = new UserRegisterHelpers(_context);
             ShoppingCartHelpers shoppingCartHelpers = new ShoppingCartHelpers(_context);
+            //TransactionHelpers transactionHelpers = new TransactionHelpers();
 
             var currentUser = await _identityUser.GetUserAsync(User);
 
@@ -45,7 +46,8 @@ namespace ClevelandTeaRevival.Controllers
                 Transaction = transObj.Transaction
             };
 
-            
+            viewModel.Transaction = shoppingCartHelpers.TransactionTotal(viewModel.Transaction, viewModel.TransactionTabs);
+                        
             return View(viewModel);
         }
     }

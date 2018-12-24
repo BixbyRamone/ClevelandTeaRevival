@@ -22,6 +22,7 @@
             <th>
                 Pounds
             </th>
+            <th></th>
         </tr>
     </thead>
 
@@ -37,10 +38,13 @@
                         @item.Tea.Name
                     </td>
                     <td>
-                        @item.Ozs
+                        @item.Ozs x @item.PricePerOz
                     </td>
                     <td>
-                        @item.Lbs
+                        @item.Lbs x @item.PricePerLb
+                    </td>
+                    <td>
+                        Placeholder for tab total
                     </td>
                 </tr>
 
@@ -49,3 +53,7 @@
         }
     </tbody>
 </table>
+<br />
+<h3>
+    Total: @Model.Transaction.Total
+</h3>

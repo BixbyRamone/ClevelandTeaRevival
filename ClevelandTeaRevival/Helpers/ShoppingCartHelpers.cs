@@ -21,7 +21,7 @@ namespace ClevelandTeaRevival.Helpers
 
         public Transaction CreateNewTransaction(Customer customer)
         {
-            Transaction newTransaction = new Transaction();
+                Transaction newTransaction = new Transaction();
 
             newTransaction.Customer = customer;
             
@@ -64,8 +64,7 @@ namespace ClevelandTeaRevival.Helpers
                 if ( currentTransaction.Teas.IndexOf(t.Tea) == -1)
                 {
                     currentTransaction.Teas.Add(t.Tea);
-                }
-               
+                }               
                 
             }
 
