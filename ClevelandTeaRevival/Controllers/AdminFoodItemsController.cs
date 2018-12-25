@@ -1,0 +1,159 @@
+﻿using ClevelandTeaRevival.Data;
+using ClevelandTeaRevival.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ClevelandTeaRevival.Controllers
+{
+    [Authorize(Roles = "Administrator")]
+    public class AdminFoodItemsController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public AdminFoodItemsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        // GET: FoodItems
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.FoodItems.ToListAsync());
+        }
+
+        // GET: FoodItems/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var foodItem = await _context.FoodItems
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (foodItem == null)
+            {
+                return NotFound();
+            }
+
+            return View(foodItem);
+        }
+
+        // GET: FoodItems/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: FoodItems/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ID,Name,Description,Price")] FoodItem foodItem)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(foodItem);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(foodItem);
+        }
+
+        // GET: FoodItems/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var foodItem = await _context.FoodItems.FindAsync(id);
+            if (foodItem == null)
+            {
+                return NotFound();
+            }
+            return View(foodItem);
+        }
+
+        // POST: FoodItems/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Description,Price")] FoodItem foodItem)
+        {
+            if (id != foodItem.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(foodItem);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!FoodItemExists(foodItem.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(foodItem);
+        }
+
+        // GET: FoodItems/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var foodItem = await _context.FoodItems
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (foodItem == null)
+            {
+                return NotFound();
+            }
+
+            return View(foodItem);
+        }
+
+        // POST: FoodItems/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var foodItem = await _context.FoodItems.FindAsync(id);
+            _context.FoodItems.Remove(foodItem);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool FoodItemExists(int id)
+        {
+            return _context.FoodItems.Any(e => e.ID == id);
+        }
+
+
+    }
+}
