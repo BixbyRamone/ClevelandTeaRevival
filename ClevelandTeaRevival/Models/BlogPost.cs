@@ -15,5 +15,10 @@ namespace ClevelandTeaRevival.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public string CreationDate { get; set; }
+
+        public BlogPost()
+        {
+            CreationDate = DateTime.Now.ToString();
+        }
     }
 }
