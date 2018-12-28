@@ -1,6 +1,7 @@
 ﻿using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
 using ClevelandTeaRevival.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ClevelandTeaRevival.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class AdminBlogPostsController : Controller
     {
         private readonly ApplicationDbContext _context;

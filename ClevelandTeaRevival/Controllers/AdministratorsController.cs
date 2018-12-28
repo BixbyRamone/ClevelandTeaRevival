@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClevelandTeaRevival.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class AdministratorsController : Controller
     {
         private readonly ApplicationDbContext _context;
