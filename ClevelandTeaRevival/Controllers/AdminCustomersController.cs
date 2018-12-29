@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ClevelandTeaRevival.Controllers
 {
@@ -15,16 +16,58 @@ namespace ClevelandTeaRevival.Controllers
     public class AdminCustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public AdminCustomersController(ApplicationDbContext context)
+        public AdminCustomersController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: AdminCustomers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder,
+                                                string searchString,
+                                                string currentFilter,
+                                                int? page)
         {
-            return View(await _context.Customers.ToListAsync());
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+            var customers = from c in _context.Customers
+                            select c;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                customers = customers.Where(c => c.LastName.Contains(searchString)
+                                            || c.ID.ToString().Contains(searchString));
+            }
+
+                switch (sortOrder)
+            {
+                case "name_desc":
+                    customers = customers.OrderByDescending(c => c.LastName);
+                    break;
+                default:
+                    customers = customers.OrderBy(c => c.LastName);
+                    break;
+            }
+
+            int pageSize = 10;
+
+            return View(await PaginatedList<Customer>.CreateAsync(customers.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: AdminCustomers/Details/5
