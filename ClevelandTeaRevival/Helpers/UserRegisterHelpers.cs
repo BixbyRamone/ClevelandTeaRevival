@@ -92,35 +92,7 @@ namespace ClevelandTeaRevival.Helpers
             teaAndTransTab.TransactionTab.TransId = customerTransaction.Transaction.ID;
 
             List<TransactionTab> transactionTabs = new List<TransactionTab>();
-
-           /* try
-            {
-                transactionTabs = _context.TransactionTabs
-                                    .Where(tt => tt.TransId == customerTransaction.Transaction.ID)
-                                    .ToList();
-            }
-            catch
-            {
-
-            }
-
-            
-
-            /*ShoppingCartHelpers shoppingCartHelpers = new ShoppingCartHelpers(_context);
-
-            if (customerTransaction.Transaction == null)
-            {
-                //create a new transaction 
-                var transaction = shoppingCartHelpers.CreateNewTransaction(customerTransaction.Customer);
-                customerTransaction.Transaction = transaction;
-
-                isTransactionNew = true;
-            }
-            else //get past transaction tabs
-            {
-               transactionTabs.Add(teaAndTransTab.TransactionTab);
-            }*/
-
+                       
             return (teaAndTransTab);
 
         }

@@ -9,6 +9,7 @@ using ClevelandTeaRevival.Data;
 using ClevelandTeaRevival.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using ClevelandTeaRevival.ViewModels;
 
 namespace ClevelandTeaRevival.Controllers
 {
@@ -73,6 +74,11 @@ namespace ClevelandTeaRevival.Controllers
         // GET: AdminCustomers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            CustomerDetailsViewModel viewModel = new CustomerDetailsViewModel
+            {
+                TransactionTabs = new List<TransactionTab>()
+            };
+
             if (id == null)
             {
                 return NotFound();
@@ -85,7 +91,32 @@ namespace ClevelandTeaRevival.Controllers
                 return NotFound();
             }
 
-            return View(customer);
+
+            var aspNetUser = _userManager.FindByIdAsync(customer.AspNetUserId);
+
+            var transactions = await _context.Transactions.Where(t => t.CustomerId == customer.ID).ToListAsync();
+
+            if (transactions != null)
+            {
+                foreach (var transaction in transactions)
+                {
+                    var transactionTabs = _context.TransactionTabs.Where(t => t.TransId == transaction.ID);
+                                                            
+                    foreach (var tab in transactionTabs)
+                    {
+                        var tea = _context.Teas.Where(t => t.ID == tab.TeaId).FirstOrDefault();
+                        tab.Tea = tea;
+                    }
+
+                    transaction.TransactionTabs = transactionTabs;
+                }
+            }            
+
+            viewModel.IdentityUser = aspNetUser.Result;
+            viewModel.Customer = customer;
+            viewModel.Transactions = transactions;
+
+            return View(viewModel);
         }
 
         // GET: AdminCustomers/Create

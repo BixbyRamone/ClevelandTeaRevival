@@ -20,6 +20,15 @@ namespace ClevelandTeaRevival.Models
 
         public bool Completed { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public string CompletionDate { get; set; }
+       
+
+        public IQueryable<TransactionTab> TransactionTabs { get; set; }
+
+
+
         public Transaction()
         {
             Completed = false;
